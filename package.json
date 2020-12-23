@@ -1,6 +1,6 @@
 {
   "name": "react-app-protect",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Password protect a react app.",
   "author": "bay0",
   "license": "MIT",
@@ -11,6 +11,7 @@
   "engines": {
     "node": ">=10"
   },
+  "keywords": ["react", "password", "basic-auth", "cryptojs", "fingerprintjs"],
   "scripts": {
     "build": "microbundle-crl --compress --format modern,cjs",
     "start": "microbundle-crl watch --compress --format modern,cjs",
