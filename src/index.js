@@ -103,7 +103,7 @@ const Protect = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, button
   )
 }
 
-Encrypt.defaultProps = {
+Protect.defaultProps = {
   obfuscate: false,
   blur: false,
   boxTitle: 'This page is password protected.',
@@ -111,7 +111,7 @@ Encrypt.defaultProps = {
   buttonLabel: 'Submit'
 }
 
-Encrypt.propTypes = {
+Protect.propTypes = {
   password: PropTypes.string.isRequired,
   obfuscate: PropTypes.bool,
   blur: PropTypes.bool,

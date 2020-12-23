@@ -1,6 +1,6 @@
 {
   "name": "react-app-protect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Password protect a react app.",
   "author": "bay0",
   "license": "MIT",
@@ -24,7 +24,9 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^16.0.0"
+    "react": "^16.0.0",
+    "@fingerprintjs/fingerprintjs": "^3.0.4",
+    "crypto-js": "^4.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
