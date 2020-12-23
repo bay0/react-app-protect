@@ -2,6 +2,10 @@
 
 > Password protect a react app.
 
+> Simple password field, not a replacment for basic auth.
+
+> Not secure at all.
+
 [![NPM](https://img.shields.io/npm/v/react-app-protect.svg)](https://www.npmjs.com/package/react-app-protect) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ### ✨ [Demo](https://bay0.github.io/react-app-protect/)
