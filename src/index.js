@@ -17,7 +17,6 @@ const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrappe
   const context = React.useMemo(() => ({ cipher, setCipher }), [cipher, setCipher]);
 
   const refBlur = React.useRef(null);
-  const [canvas, setCanvas] = React.useState(null);
   const [renderChild, setRenderChild] = React.useState(true);
 
   const handleSubmit = () => {
@@ -54,12 +53,11 @@ const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrappe
   }, []);
 
   React.useEffect(() => {
-    if(blur && refBlur.current && canvas === null) {
+    if(blur && refBlur.current && renderChild) {
       html2canvas(refBlur.current, {useCORS : true}).then(canvas => {
-        setCanvas(canvas.toDataURL());
+        refBlur.current.appendChild(canvas)
+        setRenderChild(false);
       });
-
-      setRenderChild(false);
     }
   });
 
@@ -94,8 +92,7 @@ const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrappe
             </div>
           </div>
           <div ref={refBlur} className={blur && styles.blurClass} style={{filter: `${blur && "blur(10px)"}`, overflow: "hidden"}}>
-            {blur && canvas === null && (renderChild && children)}
-            {blur && <img src={canvas} width="100%" height="100%" />}
+            {blur && (renderChild && children)}
           </div>
         </div>
       )}
