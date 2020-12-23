@@ -32,4 +32,4 @@ class App extends Component {
 
 ## License
 
-MIT © [bay00](https://github.com/bay00)
+MIT © [bay0](https://github.com/bay0)
