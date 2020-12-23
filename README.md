@@ -8,6 +8,7 @@
 
 ```bash
 npm install --save react-app-protect
+yarn add react-app-protect
 ```
 
 ## Usage
@@ -15,12 +16,16 @@ npm install --save react-app-protect
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'react-app-protect'
+import Protect from 'react-app-protect'
 import 'react-app-protect/dist/index.css'
 
-class Example extends Component {
+class App extends Component {
   render() {
-    return <MyComponent />
+    return (
+      <Protect password="test">
+        <div>Content</div>
+      </Protect>
+    )
   }
 }
 ```

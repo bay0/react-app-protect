@@ -7,7 +7,7 @@ import usePersistedState from './utils/usePersistedState';
 import useInput from './utils/useInput';
 import styles from './styles.module.css';
 
-const Encrypt = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, buttonLabel, children }) => {
+const Protect = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, buttonLabel, children }) => {
   const [fp, setFP] = React.useState(null);
   const [decrypted, setDecrypted] = React.useState("");
   const [pass, setPass] = React.useState("");
@@ -121,4 +121,4 @@ Encrypt.propTypes = {
   children: PropTypes.element.isRequired
 };
 
-export default Encrypt
+export default Protect
