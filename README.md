@@ -11,6 +11,18 @@ npm install --save react-app-protect
 yarn add react-app-protect
 ```
 
+> Using [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to encrypt the password via AES.
+> Storing the cipher in the localStorage.
+
+## Props
+| Name             | Type    | Default                          | Description                     |
+|------------------|---------|----------------------------------|---------------------------------|
+| password         | String  |                                  | Password for the react app      |
+| blur             | Boolean | false                            | Blur the content                |
+| title            | String  | This page is password protected. | Title of the login box          |
+| inputPlaceholder | String  | Password                         | Placeholder for the input field |
+| buttonLabel      | String  | Submit                           | Label used for the button       |
+
 ## Usage
 
 ```jsx
@@ -29,7 +41,6 @@ class App extends Component {
   }
 }
 ```
-
 ## License
 
 MIT © [bay0](https://github.com/bay0)

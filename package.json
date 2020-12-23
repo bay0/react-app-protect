@@ -1,6 +1,6 @@
 {
   "name": "react-app-protect",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Password protect a react app.",
   "author": "bay0",
   "license": "MIT",
@@ -12,8 +12,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle-crl --no-compress --format modern,cjs",
-    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "build": "microbundle-crl --compress --format modern,cjs",
+    "start": "microbundle-crl watch --compress --format modern,cjs",
     "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
