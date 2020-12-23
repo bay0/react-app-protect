@@ -1,6 +1,6 @@
 {
   "name": "react-app-protect",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Password protect a react app.",
   "author": "bay0",
   "license": "MIT",
@@ -11,7 +11,15 @@
   "engines": {
     "node": ">=10"
   },
-  "keywords": ["react", "password", "basic-auth", "cryptojs", "fingerprintjs"],
+  "keywords": [
+    "react",
+    "password",
+    "basic-auth",
+    "cryptojs",
+    "fingerprintjs",
+    "sha512",
+    "canvas"
+  ],
   "scripts": {
     "build": "microbundle-crl --compress --format modern,cjs",
     "start": "microbundle-crl watch --compress --format modern,cjs",
@@ -25,9 +33,9 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
     "@fingerprintjs/fingerprintjs": "^3.0.4",
-    "crypto-js": "^4.0.0"
+    "crypto-js": "^4.0.0",
+    "react": "^16.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
@@ -55,6 +63,7 @@
   ],
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.0.4",
-    "crypto-js": "^4.0.0"
+    "crypto-js": "^4.0.0",
+    "html2canvas": "^1.0.0-rc.7"
   }
 }

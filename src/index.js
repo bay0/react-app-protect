@@ -2,24 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import CryptoJS from 'crypto-js';
+import html2canvas from 'html2canvas';
 import aes from 'crypto-js/aes';
 import usePersistedState from './utils/usePersistedState';
 import styles from './styles.module.css';
 
-const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrapperClass, children }) => {
+const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrapperClass, children }) => {
+  const chkHash = sha512.toLowerCase()
   const [fp, setFP] = React.useState(null);
-  const [decrypted, setDecrypted] = React.useState("");
+  const [decryptedHash, setDecryptedHash] = React.useState("");
   const [pass, setPass] = React.useState("");
-  const refBlur = React.useRef(null);
-  const [renderChild, setRenderChild] = React.useState(true);
-  const op = { attributes : true, childList: true, attributeFilter: ["style"] };
+  
   const [cipher, setCipher] = usePersistedState('cipher', "");
   const context = React.useMemo(() => ({ cipher, setCipher }), [cipher, setCipher]);
 
+  const refBlur = React.useRef(null);
+  const [canvas, setCanvas] = React.useState(null);
+  const [renderChild, setRenderChild] = React.useState(true);
+
   const handleSubmit = () => {
-    if(pass === password) {
-      setCipher(aes.encrypt(JSON.stringify({ password }), fp.visitorId).toString());
-      setDecrypted(password);
+    const hash = CryptoJS.SHA512(pass).toString();
+
+    if(hash === chkHash) {
+      setCipher(aes.encrypt(JSON.stringify({ pass }), fp.visitorId).toString());
+      setDecryptedHash(hash);
     } else {
       setCipher('');
       setPass('');
@@ -32,15 +38,6 @@ const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrap
     }
   }
 
-  const mutCallback = (mutations) => {
-    mutations.map(mutation => {
-      if(mutation.attributeName === 'style'){
-        setRenderChild(false);
-      }
-    });    
-  }
-
-
   React.useEffect(() => {
     (async function getFingerprint() {
       const fpi = await FingerprintJS.load();
@@ -48,7 +45,8 @@ const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrap
       const d = aes.decrypt(cipher, result.visitorId).toString(CryptoJS.enc.Utf8);
 
       if(d) {
-        setDecrypted(JSON.parse(d).password);
+        const hash = CryptoJS.SHA512(JSON.parse(d).pass).toString();
+        setDecryptedHash(hash);
       }
 
       setFP(result);
@@ -56,16 +54,16 @@ const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrap
   }, []);
 
   React.useEffect(() => {
-    const observer = new MutationObserver(mutCallback);
-    if(refBlur.current) {
-      observer.observe(refBlur.current, op);
-    }
-    return () => {
-      observer.disconnect();
-    }
-  }, [mutCallback, op]);
+    if(blur && refBlur.current && canvas === null) {
+      html2canvas(refBlur.current, {useCORS : true}).then(canvas => {
+        setCanvas(canvas.toDataURL());
+      });
 
-  if(fp !== null && decrypted === password) {
+      setRenderChild(false);
+    }
+  });
+
+  if(fp !== null && decryptedHash === chkHash) {
     return children;
   }
 
@@ -80,7 +78,7 @@ const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrap
           <div className={styles.skChaseDot}></div>
         </div>
       )}
-      {fp !== null && decrypted !== password && (
+      {fp !== null && decryptedHash !== chkHash && (
         <div>
           <div className={styles.box}>
             <div className={styles.boxTitle}>
@@ -95,8 +93,9 @@ const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrap
               </button>
             </div>
           </div>
-          <div ref={refBlur} id={`${blur && styles.b}`} style={{filter: `${blur && "blur(10px)"}`, overflow: "hidden"}}>
-            {blur && (renderChild && children)}
+          <div ref={refBlur} className={blur && styles.blurClass} style={{filter: `${blur && "blur(10px)"}`, overflow: "hidden"}}>
+            {blur && canvas === null && (renderChild && children)}
+            {blur && <img src={canvas} width="100%" height="100%" />}
           </div>
         </div>
       )}
@@ -113,7 +112,7 @@ Protect.defaultProps = {
 }
 
 Protect.propTypes = {
-  password: PropTypes.string.isRequired,
+  sha512: PropTypes.string.isRequired,
   blur: PropTypes.bool,
   title: PropTypes.string,
   inputPlaceholder: PropTypes.string,
