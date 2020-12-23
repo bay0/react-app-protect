@@ -4,10 +4,9 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import CryptoJS from 'crypto-js';
 import aes from 'crypto-js/aes';
 import usePersistedState from './utils/usePersistedState';
-import useInput from './utils/useInput';
 import styles from './styles.module.css';
 
-const Protect = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, buttonLabel, children }) => {
+const Protect = ({ password, blur, boxTitle, inputPlaceholder, buttonLabel, wrapperClass, children }) => {
   const [fp, setFP] = React.useState(null);
   const [decrypted, setDecrypted] = React.useState("");
   const [pass, setPass] = React.useState("");
@@ -36,7 +35,6 @@ const Protect = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, button
   const mutCallback = (mutations) => {
     mutations.map(mutation => {
       if(mutation.attributeName === 'style'){
-        console.log("style change");
         setRenderChild(false);
       }
     });    
@@ -67,8 +65,12 @@ const Protect = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, button
     }
   }, [mutCallback, op]);
 
+  if(fp !== null && decrypted === password) {
+    return children;
+  }
+
   return (
-    <div id="cry">
+    <div className={wrapperClass}>
       {fp === null && (
         <div className={styles.skChase}>
           <div className={styles.skChaseDot}></div>
@@ -80,44 +82,43 @@ const Protect = ({ password, obfuscate, blur, boxTitle, inputPlaceholder, button
       )}
       {fp !== null && decrypted !== password && (
         <div>
-          <div id="chk" className={styles.box}>
+          <div className={styles.box}>
             <div className={styles.boxTitle}>
               {boxTitle}
             </div>
             <div>
               <input value={pass} onChange={e => setPass(e.target.value)} type="password" onKeyDown={handleKeyDown} placeholder={inputPlaceholder} />
             </div>
-            <div>
+            <div className={styles.boxButton}>
               <button onClick={handleSubmit}>
                 {buttonLabel}
               </button>
             </div>
           </div>
-          <div ref={refBlur} id={`${blur && styles.b}`} style={{filter: `${blur && "blur(2px)"}`}}>
+          <div ref={refBlur} id={`${blur && styles.b}`} style={{filter: `${blur && "blur(10px)"}`, overflow: "hidden"}}>
             {blur && (renderChild && children)}
           </div>
         </div>
       )}
-      {fp !== null && decrypted === password && children}
     </div>
   )
 }
 
 Protect.defaultProps = {
-  obfuscate: false,
   blur: false,
   boxTitle: 'This page is password protected.',
   inputPlaceholder: 'Password',
-  buttonLabel: 'Submit'
+  buttonLabel: 'Submit',
+  wrapperClass: "",
 }
 
 Protect.propTypes = {
   password: PropTypes.string.isRequired,
-  obfuscate: PropTypes.bool,
   blur: PropTypes.bool,
   title: PropTypes.string,
   inputPlaceholder: PropTypes.string,
   buttonLabel: PropTypes.string,
+  wrapperClass: PropTypes.string,
   children: PropTypes.element.isRequired
 };
 

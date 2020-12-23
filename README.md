@@ -4,6 +4,9 @@
 
 [![NPM](https://img.shields.io/npm/v/react-app-protect.svg)](https://www.npmjs.com/package/react-app-protect) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+### ✨ [Demo](https://bay0.github.io/ev0-skin-gen/)
+###### password: test
+
 ## Install
 
 ```bash
@@ -20,8 +23,9 @@ yarn add react-app-protect
 | password         | String  |                                  | Password for the react app      |
 | blur             | Boolean | false                            | Blur the content                |
 | title            | String  | This page is password protected. | Title of the login box          |
-| inputPlaceholder | String  | Password                         | Placeholder for the input field |
+| inputPlaceholder | String  | Password                         | Placeholder for the input field  |
 | buttonLabel      | String  | Submit                           | Label used for the button       |
+| wrapperClass     | String  |                                  | CSS class to wrap               |
 
 ## Usage
 
