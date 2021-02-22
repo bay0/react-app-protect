@@ -27,7 +27,7 @@ yarn add react-app-protect
 |------------------|---------|----------------------------------|---------------------------------|
 | sha512           | String  |                                  | SHA 512 Hash app                |
 | blur             | Boolean | false                            | Blur the content                |
-| title            | String  | This page is password protected. | Title of the login box          |
+| boxTitle            | String  | This page is password protected. | Title of the login box          |
 | inputPlaceholder | String  | Password                         | Placeholder for the input field |
 | buttonLabel      | String  | Submit                           | Label used for the button       |
 | wrapperClass     | String  |                                  | CSS class to wrap               |
