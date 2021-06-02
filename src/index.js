@@ -1,103 +1,125 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import CryptoJS from 'crypto-js';
-import html2canvas from 'html2canvas';
-import aes from 'crypto-js/aes';
-import usePersistedState from './utils/usePersistedState';
-import styles from './styles.module.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
+import CryptoJS from 'crypto-js'
+import html2canvas from 'html2canvas'
+import aes from 'crypto-js/aes'
+import usePersistedState from './utils/usePersistedState'
+import cssStyles from './styles.module.css'
 
-const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrapperClass, children }) => {
+const Protect = ({
+  sha512,
+  blur,
+  boxTitle,
+  inputPlaceholder,
+  buttonLabel,
+  styles,
+  children
+}) => {
   const chkHash = sha512.toLowerCase()
-  const [fp, setFP] = React.useState(null);
-  const [decryptedHash, setDecryptedHash] = React.useState("");
-  const [pass, setPass] = React.useState("");
-  
-  const [cipher, setCipher] = usePersistedState('cipher', "");
-  const context = React.useMemo(() => ({ cipher, setCipher }), [cipher, setCipher]);
+  const [fp, setFP] = React.useState(null)
+  const [decryptedHash, setDecryptedHash] = React.useState('')
+  const [pass, setPass] = React.useState('')
 
-  const refBlur = React.useRef(null);
-  const [renderChild, setRenderChild] = React.useState(true);
+  const [cipher, setCipher] = usePersistedState('cipher', '')
+  const context = React.useMemo(() => ({ cipher, setCipher }), [
+    cipher,
+    setCipher
+  ])
+
+  const refBlur = React.useRef(null)
+  const [renderChild, setRenderChild] = React.useState(true)
 
   const handleSubmit = () => {
-    const hash = CryptoJS.SHA512(pass).toString();
+    const hash = CryptoJS.SHA512(pass).toString()
 
-    if(hash === chkHash) {
-      setCipher(aes.encrypt(JSON.stringify({ pass }), fp.visitorId).toString());
-      setDecryptedHash(hash);
+    if (hash === chkHash) {
+      setCipher(aes.encrypt(JSON.stringify({ pass }), fp.visitorId).toString())
+      setDecryptedHash(hash)
     } else {
-      setCipher('');
-      setPass('');
+      setCipher('')
+      setPass('')
     }
   }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSubmit();
+      handleSubmit()
     }
   }
 
   React.useEffect(() => {
-    (async function getFingerprint() {
-      const fpi = await FingerprintJS.load();
-      const result = await fpi.get();
-      let d;
+    ;(async function getFingerprint() {
+      const fpi = await FingerprintJS.load()
+      const result = await fpi.get()
+      let d
       try {
-        d = aes.decrypt(cipher, result.visitorId).toString(CryptoJS.enc.Utf8);
-      } catch(e) {
-        d = ""
+        d = aes.decrypt(cipher, result.visitorId).toString(CryptoJS.enc.Utf8)
+      } catch (e) {
+        d = ''
       }
 
-      if(d) {
-        const hash = CryptoJS.SHA512(JSON.parse(d).pass).toString();
-        setDecryptedHash(hash);
+      if (d) {
+        const hash = CryptoJS.SHA512(JSON.parse(d).pass).toString()
+        setDecryptedHash(hash)
       }
 
-      setFP(result);
-    })();
-  }, []);
+      setFP(result)
+    })()
+  }, [])
 
   React.useEffect(() => {
-    if(blur && refBlur.current && renderChild) {
-      html2canvas(refBlur.current, {useCORS : true}).then(canvas => {
+    if (blur && refBlur.current && renderChild) {
+      html2canvas(refBlur.current, { useCORS: true }).then((canvas) => {
         refBlur.current.appendChild(canvas)
-        setRenderChild(false);
-      });
+        setRenderChild(false)
+      })
     }
-  });
+  })
 
-  if(fp !== null && decryptedHash === chkHash) {
-    return children;
+  if (fp !== null && decryptedHash === chkHash) {
+    return children
   }
 
   return (
-    <div className={wrapperClass}>
+    <div>
       {fp === null && (
-        <div className={styles.skChase}>
-          <div className={styles.skChaseDot}></div>
-          <div className={styles.skChaseDot}></div>
-          <div className={styles.skChaseDot}></div>
-          <div className={styles.skChaseDot}></div>
-          <div className={styles.skChaseDot}></div>
+        <div className={cssStyles.skChase}>
+          <div className={cssStyles.skChaseDot}></div>
+          <div className={cssStyles.skChaseDot}></div>
+          <div className={cssStyles.skChaseDot}></div>
+          <div className={cssStyles.skChaseDot}></div>
+          <div className={cssStyles.skChaseDot}></div>
         </div>
       )}
       {fp !== null && decryptedHash !== chkHash && (
         <div>
-          <div className={styles.box}>
-            <div className={styles.boxTitle}>
+          <div style={styles.wrapper} className={cssStyles.box}>
+            <div style={styles.header} className={cssStyles.boxTitle}>
               {boxTitle}
             </div>
             <div>
-              <input value={pass} onChange={e => setPass(e.target.value)} type="password" onKeyDown={handleKeyDown} placeholder={inputPlaceholder} />
+              <input
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                type='password'
+                onKeyDown={handleKeyDown}
+                placeholder={inputPlaceholder}
+                style={styles.input}
+              />
             </div>
-            <div className={styles.boxButton}>
-              <button onClick={handleSubmit}>
+            <div className={cssStyles.boxButton}>
+              <button style={styles.button} onClick={handleSubmit}>
                 {buttonLabel}
               </button>
             </div>
           </div>
-          <div ref={refBlur} className={blur && styles.blurClass} style={{filter: `${blur && "blur(10px)"}`, overflow: "hidden"}}>
-            {blur && (renderChild && children)}
+          <div
+            ref={refBlur}
+            className={blur && cssStyles.blurClass}
+            style={{ filter: `${blur && 'blur(10px)'}`, overflow: 'hidden' }}
+          >
+            {blur && renderChild && children}
           </div>
         </div>
       )}
@@ -110,7 +132,12 @@ Protect.defaultProps = {
   boxTitle: 'This page is password protected.',
   inputPlaceholder: 'Password',
   buttonLabel: 'Submit',
-  wrapperClass: "",
+  styles: {
+    input: {},
+    button: {},
+    header: {},
+    wrapper: {}
+  }
 }
 
 Protect.propTypes = {
@@ -119,8 +146,8 @@ Protect.propTypes = {
   title: PropTypes.string,
   inputPlaceholder: PropTypes.string,
   buttonLabel: PropTypes.string,
-  wrapperClass: PropTypes.string,
+  styles: PropTypes.object,
   children: PropTypes.element.isRequired
-};
+}
 
 export default Protect
