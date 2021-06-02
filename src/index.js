@@ -45,7 +45,7 @@ const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrappe
       try {
         d = aes.decrypt(cipher, result.visitorId).toString(CryptoJS.enc.Utf8);
       } catch(e) {
-        d= ""
+        d = ""
       }
 
       if(d) {
