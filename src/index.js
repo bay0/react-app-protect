@@ -41,7 +41,12 @@ const Protect = ({ sha512, blur, boxTitle, inputPlaceholder, buttonLabel, wrappe
     (async function getFingerprint() {
       const fpi = await FingerprintJS.load();
       const result = await fpi.get();
-      const d = aes.decrypt(cipher, result.visitorId).toString(CryptoJS.enc.Utf8);
+      let d;
+      try {
+        d = aes.decrypt(cipher, result.visitorId).toString(CryptoJS.enc.Utf8);
+      } catch(e) {
+        d = ""
+      }
 
       if(d) {
         const hash = CryptoJS.SHA512(JSON.parse(d).pass).toString();
